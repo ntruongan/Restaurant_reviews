@@ -9,9 +9,8 @@ Created on Sun Dec 27 11:41:54 2020
 
 from tkinter import *
 from tkinter.ttk import Frame, Button, Style
+import natural_language_processing_ann_new as ANLP
 # import natural_language_processing as NLP
-import natural_language_processing_ann as ANLP
- 
 window = Tk()
  
 
@@ -20,6 +19,7 @@ def clicked():
     review = txt_input.get("1.0","end")
     print(review)
     result = ANLP.review_input(review)
+    # result = NLP.review_input(review)
     lbl_output.configure(text=str(result))
     # if result >= 0.5:
     #     lbl_output.configure(text=str(result))
@@ -29,11 +29,10 @@ def clicked():
 def down(e):
     if e.keycode == 13:
         clicked()
-    
+     
 
 
-window.title("Welcome to LikeGeeks app")
- 
+window.title("Welcome to Restaurant review rate")
 lbl_input = Label(window, text="Customer Review")
 txt_input = Text(window)
 txt_input.grid(column=1,row = 0)

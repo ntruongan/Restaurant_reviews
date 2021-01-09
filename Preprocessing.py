@@ -15,6 +15,8 @@ from nltk.stem.porter import PorterStemmer  #gôp các động từ đã đượ
 
 
 
+        
+        
 
 #%% Importing the dataset
 def read_dataset(tsv_filename):
@@ -33,24 +35,25 @@ def text_preprocessing(dataset):
     """return list of reviews after clear"""
     corpus = [] #chứa các reviews đã qua các bước lọc
     for i in range(0, dataset.shape[0]):
-      review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i]) #loại bỏ các phần không phải
-      #là chữ cái, thay thế bằng dấu spaces
-      #^: not
-      #a-zA-Z: a to z nor A to Z
-      #' ': space
-      review = review.lower() # all to lowercase
-      review = review.split() # split to words
-      # print (review)
-      ps = PorterStemmer() # ran => run,....
+        review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i])
+        # review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i]) #loại bỏ các phần không phải
+        #là chữ cái, thay thế bằng dấu spaces
+        #^: not
+        #a-zA-Z: a to z nor A to Z
+        #' ': space
+        review = review.lower() # all to lowercase
+        review = review.split() # split to words
+        # print (review)
+        ps = PorterStemmer() # ran => run,....
       
-      all_stopwords = stopwords.words('english')
-      all_stopwords.remove('not')
-      all_stopwords.remove("isn't")
-      review = [ps.stem(word) for word in review if not word in set(all_stopwords)]
+        all_stopwords = stopwords.words('english')
+        all_stopwords.remove('not')
+
+        review = [ps.stem(word) for word in review if not word in set(all_stopwords)]
     
-      review = ' '.join(review) # nối lại các từ thành câu
-      # print(review)
-      corpus.append(review)
+        review = ' '.join(review) # nối lại các từ thành câu
+        # print(review)
+        corpus.append(review)
     return corpus
     
 
@@ -67,11 +70,10 @@ def text_for_nn_predict(review):
     ps = PorterStemmer()
     all_stopwords = stopwords.words('english')
     all_stopwords.remove('not')
-    all_stopwords.remove("isn't")
     new_review = [ps.stem(word) for word in new_review if not word in set(all_stopwords)]
     new_review = ' '.join(new_review)
     new_corpus = [new_review]
-    new_X_test = cv.transform(new_corpus).toarray()
-    new_y_pred = classifier.predict(new_X_test)
-    return new_y_pred[0]
+    new_X_test = cv.transform(new_corpus).toarray() # tao vector
+    return new_X_test
+
 
