@@ -13,6 +13,7 @@ from nltk.stem.porter import PorterStemmer
 class Model():
        
     def __init__(self, model_path = 'model', dataset_path = 'Restaurant_Reviews.tsv', corpus = [], stopword_name='stopwords.txt'):
+        
         self.model = keras.models.load_model(model_path)
         self.dataset = pd.read_csv(dataset_path, delimiter = '\t', quoting = 3)
         
