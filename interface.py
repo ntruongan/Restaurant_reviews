@@ -18,7 +18,6 @@ models = ANLP.Model()
 
 def clicked():
     review = txt_input.get("1.0","end")
-    print(review)
     result = models.review_input(review)
     # result = NLP.review_input(review)
     lbl_output.configure(text=str(result))
@@ -26,11 +25,41 @@ def clicked():
     #     lbl_output.configure(text=str(result))
     # else:
     #     lbl_output.configure(text=str(result))
+    messagebox.showinfo(title="Result", message=str(result))
+    add_to_database()
 
 def down(e):
     if e.keycode == 13:
         clicked()
      
+def add_to_database():
+    review = txt_input.get("1.0","end")
+    review = review.replace("\n"," ")
+    if len(review)==1:
+        messagebox.showinfo(title="Status", message="Can't find the review in textbox")
+    else:
+        result = messagebox.askyesno(title='Confirm', 
+                                     message='Does the Result correct?')
+        
+        if result == True:
+            file = open("Restaurant_Reviews.tsv","a+")
+            if (models.review_input(review)>=0.5):
+                review = review + "\t"+ "1\n"
+            else:
+                review = review + "\t"+ "0\n"
+        elif result == False:
+            file = open("Restaurant_Reviews.tsv","a+")
+            if (models.review_input(review)>=0.5):
+                review = review + "\t"+ "0\n"
+            else:
+                review = review + "\t"+ "1\n"
+        if(file.write(review)>0):
+            messagebox.showinfo(title="Status", message='Success')
+        else:
+            messagebox.showinfo(title="Status", message='Fail')
+        file.close()
+                
+
 
 
 window.title("Welcome to Restaurant review rate")
@@ -47,5 +76,7 @@ lbl_output.grid(column=1, row = 2)
 
 btn = Button(window, text= "Classify", command=clicked)
 btn.grid(column=1, row=1)
+
+
 window.resizable()
 window.mainloop()
