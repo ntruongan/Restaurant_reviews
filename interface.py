@@ -9,16 +9,17 @@ Created on Sun Dec 27 11:41:54 2020
 
 from tkinter import *
 from tkinter.ttk import Frame, Button, Style
-import natural_language_processing_ann_new as ANLP
-# import natural_language_processing as NLP
-window = Tk()
- 
 
+import model as ANLP
+
+window = Tk()
+
+models = ANLP.Model()
 
 def clicked():
     review = txt_input.get("1.0","end")
     print(review)
-    result = ANLP.review_input(review)
+    result = models.review_input(review)
     # result = NLP.review_input(review)
     lbl_output.configure(text=str(result))
     # if result >= 0.5:
@@ -35,8 +36,8 @@ def down(e):
 window.title("Welcome to Restaurant review rate")
 lbl_input = Label(window, text="Customer Review")
 txt_input = Text(window)
-txt_input.grid(column=1,row = 0)
-lbl_input.grid(column=0, row=0) 
+txt_input.grid(column=1, row = 0)
+lbl_input.grid(column=0, row = 0) 
 window.bind('<KeyPress>', down)
 
 lbl_output = Label(window, text="Classification", bg="orange", fg="red")

@@ -101,7 +101,7 @@ loss1, accuracy1 = model.evaluate(X_train, y_train, verbose=1)
 loss2, accuracy2 = model.evaluate(X_test, y_test, verbose=1)
 print("Training Accuracy: {:.4f}".format(accuracy1))
 print("Testing Accuracy:  {:.4f}".format(accuracy2))
-
+model.save('model')
 
 #%% print 
 # def weight_of_model(model):
