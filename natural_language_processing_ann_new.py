@@ -30,8 +30,11 @@ try:
         stopwords.append(s)
 finally:
     file.close()
-#%%
-
+    
+#%% process
+count_stopword = []
+stopword_list_appear = []
+non_stopword_list_appear = []
 corpus = [] #chứa các reviews đã qua các bước lọc
 for i in range(0, dataset.shape[0]):
     review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i]) #loại bỏ các phần không phải
@@ -42,15 +45,60 @@ for i in range(0, dataset.shape[0]):
     review = review.lower() # all to lowercase
     review = review.split() # split to words
     ps = PorterStemmer() # ran => run,....
-    review = [ps.stem(word) for word in review if not word in set(stopwords)] # chuyển về nguyên
+    word_list = []
+    
+    for word in review:
+        
+        if word in set(stopwords):
+            stopword_list_appear.append(word)
+            # print(word)
+        else:
+            non_stopword_list_appear.append(word)
+            word_list.append(ps.stem(word))
+
+    # review = [ps.stem(word) for word in review if not word in set(stopwords)] # chuyển về nguyên
     # mẫu các từ không có trong stopwords
-    review = ' '.join(review) # nối lại các từ thành câu
-    corpus.append(review)
+    # print(word_list)
+    review = ' '.join(word_list) # nối lại các từ thành câu
+    corpus.append(review)    
+    
+f = open("stopword_at_runtime.txt","w+")
+content = '\n'.join(stopword_list_appear)
+f.write(content)
+f.close()
+
+f2 = open("non_stopword_at_runtime.txt","w+")
+content = '\n'.join(non_stopword_list_appear)
+f2.write(content)
+f2.close()
+#%% 
+
+
+
+
+
+
+#%%
+
+# corpus = [] #chứa các reviews đã qua các bước lọc
+# for i in range(0, dataset.shape[0]):
+#     review = re.sub('[^a-zA-Z]', ' ', dataset['Review'][i]) #loại bỏ các phần không phải
+#         #là chữ cái, thay thế bằng dấu spaces
+#         #^: not
+#         #a-zA-Z: a to z nor A to Z
+#         #' ': space
+#     review = review.lower() # all to lowercase
+#     review = review.split() # split to words
+#     ps = PorterStemmer() # ran => run,....
+#     review = [ps.stem(word) for word in review if not word in set(stopwords)] # chuyển về nguyên
+#     # mẫu các từ không có trong stopwords
+#     review = ' '.join(review) # nối lại các từ thành câu
+#     corpus.append(review)
 
 
 #%% Creating the Bag of Words model
 from sklearn.feature_extraction.text import CountVectorizer
-cv = CountVectorizer(max_features = 2000) # chọn ra 2000 từ
+cv = CountVectorizer() 
 X = cv.fit_transform(corpus).toarray()
 y = dataset.iloc[:, -1].values
 # stored
@@ -101,7 +149,7 @@ loss1, accuracy1 = model.evaluate(X_train, y_train, verbose=1)
 loss2, accuracy2 = model.evaluate(X_test, y_test, verbose=1)
 print("Training Accuracy: {:.4f}".format(accuracy1))
 print("Testing Accuracy:  {:.4f}".format(accuracy2))
-model.save('model')
+# model.save('model')
 
 #%% print 
 # def weight_of_model(model):
@@ -122,15 +170,69 @@ def review_input(review):
 
 
 
-#%% test
+
+#%% draw chart
 
 
+dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
+dict_stw = {k: v for k, v in sorted(dict_stw.items(), key=lambda item: item[1])}
+
+
+dict_non_stw = {word:non_stopword_list_appear.count(word) for word in non_stopword_list_appear}
+dict_non_stw = {k: v for k, v in sorted(dict_non_stw.items(), key=lambda item: item[1])}
+
+
+list_stw_top10 = dict_stw.items()
+list_stw_top10 = list(list_stw_top10)[-10:]
+
+
+list_non_stw_top10 = dict_non_stw.items()
+list_non_stw_top10 = list(list_non_stw_top10)[-10:]
+# top stopword count
+Xline = []
+yline = []
+for x in list_stw_top10:
+    Xline.append(x[0])
+    yline.append(x[1])
+Xline.reverse()
+yline.reverse()
+
+
+plot1 = plt.figure(1)
+plt.bar(Xline, yline)
+plt.title('Top 10 Stopwords')
+plt.xlabel('stopword')
+plt.ylabel('count')
+plt.show()
+
+
+
+# top non-stopword count
+Xline = []
+yline = []
+for x in list_non_stw_top10:
+    Xline.append(x[0])
+    yline.append(x[1])
+Xline.reverse()
+yline.reverse()
+
+
+plot4 = plt.figure(4)
+plt.bar(Xline, yline)
+plt.title('Top 10 non-stopwords')
+plt.xlabel('non-stopword')
+plt.ylabel('count')
+plt.show()
+
+
+
+plot2 = plt.figure(2)
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(1,len(acc)+1)
-
+# plt2 = plt()
 plt.plot(epochs, acc,'bo', label='Training accuracy')
 
 plt.plot(epochs, val_acc,'b', label='Validation accuracy')
@@ -140,3 +242,29 @@ plt.legend()
 plt.show()
 
 
+# stopword and word not stopword
+not_stopwords = len(sorted(cv.vocabulary_))
+num_stopwords = len(dict_stw)
+X_values = []
+X_values.append(not_stopwords/(not_stopwords+num_stopwords))
+X_values.append(num_stopwords/(not_stopwords+num_stopwords))
+labe = ['non-stopword: '+str(not_stopwords),'stopwords: '+str(num_stopwords)]
+
+plot3 = plt.figure(3)
+plt.pie(X_values,[0.1,0],labels=labe)
+plt.title('Stopword and non-stopword in database')
+plt.show()
+
+
+# total stopword appear times  and total non-stopword appear times 
+not_stopwords_appear = len(non_stopword_list_appear)
+num_stopwords_appear = len(stopword_list_appear)
+X_values = []
+X_values.append(not_stopwords_appear/(not_stopwords_appear+num_stopwords_appear))
+X_values.append(num_stopwords_appear/(not_stopwords_appear+num_stopwords_appear))
+labe = ['non-stopword: '+str(not_stopwords_appear),'stopwords: '+str(num_stopwords_appear)]
+
+plot5 = plt.figure(5)
+plt.pie(X_values,[0.1,0],labels=labe)
+plt.title('Total stopword appear times and Total non-stopword appear times ')
+plt.show()
