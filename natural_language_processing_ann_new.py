@@ -224,7 +224,7 @@ plt.xlabel('non-stopword')
 plt.ylabel('count')
 plt.show()
 
-
+#
 
 plot2 = plt.figure(2)
 acc = history.history['accuracy']

@@ -16,6 +16,12 @@ window = Tk()
 
 models = ANLP.Model()
 
+
+
+
+
+
+
 def clicked():
     review = txt_input.get("1.0","end")
     result = models.review_input(review)
