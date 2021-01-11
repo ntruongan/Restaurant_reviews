@@ -62,12 +62,12 @@ for i in range(0, dataset.shape[0]):
     review = ' '.join(word_list) # nối lại các từ thành câu
     corpus.append(review)    
     
-f = open("stopword_at_runtime.txt","w+")
+f = open(r'runtime\stopword_at_runtime.txt',"w+")
 content = '\n'.join(stopword_list_appear)
 f.write(content)
 f.close()
 
-f2 = open("non_stopword_at_runtime.txt","w+")
+f2 = open(r'runtime\non_stopword_at_runtime.txt',"w+")
 content = '\n'.join(non_stopword_list_appear)
 f2.write(content)
 f2.close()
@@ -103,7 +103,7 @@ X = cv.fit_transform(corpus).toarray()
 y = dataset.iloc[:, -1].values
 # stored
 mydictionary = sorted(cv.vocabulary_)
-file = open('words_in_BoW_model.txt', 'w+')
+file = open(r'word_collection\words_in_BoW_model.txt', 'w+')
 for key in mydictionary:
     file.write(key+"\n")
 file.close()

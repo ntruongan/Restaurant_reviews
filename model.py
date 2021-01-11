@@ -6,14 +6,23 @@ Created on Sat Jan  9 13:29:41 2021
 """
 import keras
 import pandas as pd
+import pickle
 from sklearn.feature_extraction.text import CountVectorizer
 import re
+import numpy as np
 from nltk.stem.porter import PorterStemmer
 import matplotlib.pyplot as plt
 class Model():
        
-    def __init__(self, model_path = 'model', dataset_path = 'Restaurant_Reviews.tsv', corpus = [], stopword_name='stopwords.txt'):
-        self.model = keras.models.load_model(model_path)
+    def __init__(self, model_path = 'model', is_ann = True, dataset_path = 'Restaurant_Reviews.tsv', corpus = [], stopword_name='stopwords.txt'):
+        
+        self.is_ann = is_ann
+        if self.is_ann:
+            self.model = keras.models.load_model(model_path)
+        else:
+            f = open(model_path, 'rb')
+            self.model = pickle.load(f)
+            f.close()
         self.dataset = pd.read_csv(dataset_path, delimiter = '\t', quoting = 3)
         
         stopwords = []
@@ -89,7 +98,7 @@ class Model():
         self.cv = CountVectorizer(max_features = 2000) # chọn ra 2000 từ
         self.cv.fit_transform(self.corpus).toarray()
         mydictionary = sorted(self.cv.vocabulary_)
-        file = open('words_in_BoW_model.txt', 'w+')
+        file = open(r'word_collection\words_in_BoW_model.txt', 'w+')
         for key in mydictionary:
             file.write(key+"\n")
         file.close()
@@ -108,10 +117,15 @@ class Model():
     
     def review_input(self, review):
         y_pred=self.model.predict(self.preprocess_review_input(review))
-        return y_pred[0][0]
+        # print(y_pred)
+        result = np.array(y_pred)
+        if result.shape == (1, 1):
+            return y_pred[0][0]
+        elif result.shape == (1,):
+            return y_pred[0]
         
     def top_stopword_count(self, top: int):
-        f = open("stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r")
         stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -133,7 +147,7 @@ class Model():
         plt.show()
         
     def top_non_stopword_count(self, top: int):
-        f = open("non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_non_stw = {word:non_stopword_list_appear.count(word) for word in non_stopword_list_appear}
@@ -149,16 +163,16 @@ class Model():
         yline.reverse()  
         plot4 = plt.figure(4)
         plt.bar(Xline, yline)
-        plt.title('Top {0} Stopwords'.format(top))
+        plt.title('Top {0} non stopwords'.format(top))
         plt.xlabel('non-stopword')
         plt.ylabel('count')
         plt.show()        
         
     def stopword_and_non_stopword(self):
-        f = open("stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r")
         stopword_list_appear = f.read().splitlines()
         f.close()
-        f = open("non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -178,10 +192,10 @@ class Model():
         plt.show()
     
     def total_stopword_appear_total_non_stopword_appear(self):
-        f = open("stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r")
         stopword_list_appear = f.read().splitlines()
         f.close()
-        f = open("non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -201,6 +215,10 @@ class Model():
         plt.title('Total stopword appear times and Total non-stopword appear times ')
         plt.show()
         
+
+            
+    def score(self):
+        pass
         
         
         
