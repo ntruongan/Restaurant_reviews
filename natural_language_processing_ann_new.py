@@ -7,6 +7,7 @@ import pandas as pd
 import keras
 from keras import Sequential                     
 from nltk.stem.porter import PorterStemmer
+import pickle
 
 #%% Importing the dataset
 dataset = pd.read_csv('Restaurant_Reviews.tsv', delimiter = '\t', quoting = 3)
@@ -62,6 +63,10 @@ for i in range(0, dataset.shape[0]):
     review = ' '.join(word_list) # nối lại các từ thành câu
     corpus.append(review)    
     
+f = open(r'corpus\corpus.pickle', 'wb')
+pickle.dump(corpus, f)
+f.close()
+
 f = open(r'runtime\stopword_at_runtime.txt',"w+")
 content = '\n'.join(stopword_list_appear)
 f.write(content)
@@ -107,6 +112,10 @@ file = open(r'word_collection\words_in_BoW_model.txt', 'w+')
 for key in mydictionary:
     file.write(key+"\n")
 file.close()
+
+f = open(r'vectorizer\cv.pickle', 'wb')
+pickle.dump(cv, f)
+f.close()
 #%% Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, random_state = 0)
@@ -149,7 +158,7 @@ loss1, accuracy1 = model.evaluate(X_train, y_train, verbose=1)
 loss2, accuracy2 = model.evaluate(X_test, y_test, verbose=1)
 print("Training Accuracy: {:.4f}".format(accuracy1))
 print("Testing Accuracy:  {:.4f}".format(accuracy2))
-# model.save('model')
+model.save('model')
 
 #%% print 
 # def weight_of_model(model):

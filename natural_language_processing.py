@@ -92,10 +92,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, rand
 
 import pickle
 from sklearn.svm import SVC
+
 classifier = SVC(kernel = 'linear', random_state = 0)
 classifier.fit(X_train, y_train)
-# import pickle
-f = open('classifier\svc_classifier.pickle', 'wb')
+f = open(r'classifier\svc_classifier.pickle', 'wb')
 pickle.dump(classifier, f)
 f.close()
 
@@ -103,9 +103,7 @@ f.close()
 from sklearn.naive_bayes import MultinomialNB
 classifier = MultinomialNB()
 classifier.fit(X_train, y_train)
-
-# import pickle
-f = open('classifier\multinomialNB_classifier.pickle', 'wb')
+f = open(r'classifier\multinomialNB_classifier.pickle', 'wb')
 pickle.dump(classifier, f)
 f.close()
 
@@ -114,10 +112,15 @@ f.close()
 from sklearn.naive_bayes import GaussianNB
 classifier = GaussianNB()
 classifier.fit(X_train, y_train)
-# classifier.save()
+f = open(r'classifier\gaussianNB_classifier.pickle', 'wb')
+pickle.dump(classifier, f)
+f.close()
 
 
-f = open('classifier\gaussianNB_classifier.pickle', 'wb')
+from sklearn.naive_bayes import BernoulliNB
+classifier = BernoulliNB()
+classifier.fit(X_train, y_train)
+f = open(r'classifier\bernoulliNB_classifier.pickle', 'wb')
 pickle.dump(classifier, f)
 f.close()
 

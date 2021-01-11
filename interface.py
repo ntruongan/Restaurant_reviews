@@ -9,9 +9,6 @@ from tkinter import *
 from tkinter import simpledialog
 import model as ANLP
 
-
-
-
 class MyWindow:
     def __init__(self, window, models):
         self.model = models
@@ -53,110 +50,151 @@ class MyWindow:
         self.select_model_menu.add_command(label = "Artificial Neural Network", 
                                      command = self.ann_select)
         self.select_model_menu.add_separator()
-        self.select_model_menu.add_command(label = "GaussianNB", 
+        self.select_model_menu.add_command(label = "Gaussian Naive Bayes", 
                                      command = self.gauss_select)
         self.select_model_menu.add_separator()
-        self.select_model_menu.add_command(label = "MultinomialNB", 
+        self.select_model_menu.add_command(label = "Multinomial Naive Bayes", 
                                      command = self.multi_select)
+        
+        self.select_model_menu.add_separator()
+        self.select_model_menu.add_command(label = "Bernoulli Naive Bayes", 
+                                     command = self.bernu_select)
         
         self.select_model_menu.add_separator()
         self.select_model_menu.add_command(label = "Support vector machines", 
                                      command = self.svc_select)
 
-        
+
 
         
     def ann_select(self):
-        self.window.title('ANN')
-        self.model = ANLP.Model(model_path = r'model',is_ann = True)
+        try:
+            self.window.title('{0} for text classification'.format('Artificial Neural Network'))
+            self.model = ANLP.Model(model_path = r'model',is_ann = True)
+            messagebox.showinfo(title="Change model", message="Success")
+        except:
+            messagebox.showinfo(title="Change model", message="Fail")
+
+
+    def bernu_select(self):
+        try:
+            self.window.title('{0} for text classification'.format('Bernoulli Naive Bayes'))
+            self.model = ANLP.Model(model_path = r'classifier\bernoulliNB_classifier.pickle',is_ann = False)
+            messagebox.showinfo(title="Change model", message="Success")
+        except:
+            messagebox.showinfo(title="Change model", message="Fail")
     
     def gauss_select(self):
-        self.window.title('GaussianNB')
-        self.model = ANLP.Model(model_path = r'classifier\gaussianNB_classifier.pickle',is_ann = False)
+        try:
+            self.window.title('{0} for text classification'.format('Gaussian Naive Bayes'))
+            self.model = ANLP.Model(model_path = r'classifier\gaussianNB_classifier.pickle',is_ann = False)
+            messagebox.showinfo(title="Change model", message="Success")
+        except:
+            messagebox.showinfo(title="Change model", message="Fail")
     
     def multi_select(self):
-        self.window.title('MultinomialNB')
-        self.model = ANLP.Model(model_path = r'classifier\multinomialNB_classifier.pickle',is_ann = False)
+        try:
+            self.window.title('{0} for text classification'.format('Multinomial Naive Bayes'))
+            self.model = ANLP.Model(model_path = r'classifier\multinomialNB_classifier.pickle',is_ann = False)
+            messagebox.showinfo(title="Change model", message="Success")
+        except:
+            messagebox.showinfo(title="Change model", message="Fail")
 
     def svc_select(self):
-        self.model = ANLP.Model(model_path = r'classifier\svc_classifier.pickle',is_ann = False)
-        self.window.title('SVC')
-
+        try:
+            self.model = ANLP.Model(model_path = r'classifier\svc_classifier.pickle',is_ann = False)
+            self.window.title('{0} for text classification'.format('Support vector machines'))
+            messagebox.showinfo(title="Change model", message="Success")
+        except:
+            messagebox.showinfo(title="Change model", message="Fail")
+            
     def popup_number(self):
         a=simpledialog.askinteger(title="Top", prompt="Enter number of words",parent=self.window )
         return a
         
     def export_top_stopword_count(self):
-        a = self.popup_number()
-        self.model.top_stopword_count(a)
+        try:
+            a = self.popup_number()
+            self.model.top_stopword_count(a)
+            # messagebox.showinfo(title="Export", message="Success")
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
         
     def export_top_non_stopword_count(self):
-        a = self.popup_number()
-        self.model.top_non_stopword_count(a)
+        try:
+            a = self.popup_number()
+            self.model.top_non_stopword_count(a)
+            # messagebox.showinfo(title="Export", message="Success")
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
     
     def export_total_stopword_appear_total_non_stopword_appear(self):
-        self.model.total_stopword_appear_total_non_stopword_appear()
+        try:
+            self.model.total_stopword_appear_total_non_stopword_appear() 
+            # messagebox.showinfo(title="Export", message="Success")
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
     
     def export_stopword_and_non_stopword(self):
-        self.model.stopword_and_non_stopword()
+        try:
+            self.model.stopword_and_non_stopword()
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
         
     def command(self):
         pass
     
     def add_to_database(self):
-        review = self.txt_input.get("1.0","end")
-        review = review.replace("\n"," ")
-        if len(review)==1:
-            messagebox.showinfo(title="Status", message="Can't find the review in textbox")
-        else:
-            result = messagebox.askyesno(title='Confirm', 
-                                          message='Does the Result correct?')
-            
-            if result == True:
-                file = open("Restaurant_Reviews.tsv","a+")
-                if (self.model.review_input(review)>=0.5):
-                    review = review + "\t"+ "1\n"
-                else:
-                    review = review + "\t"+ "0\n"
-            elif result == False:
-                file = open("Restaurant_Reviews.tsv","a+")
-                if (self.model.review_input(review)>=0.5):
-                    review = review + "\t"+ "0\n"
-                else:
-                    review = review + "\t"+ "1\n"
-            if(file.write(review)>0):
-                messagebox.showinfo(title="Status", message='Success')
+        try:
+            review = self.txt_input.get("1.0","end")
+            review = review.replace("\n"," ")
+            if len(review)==1:
+                messagebox.showinfo(title="Status", message="Can't find the review in textbox")
             else:
-                messagebox.showinfo(title="Status", message='Fail')
-            file.close()
+                result = messagebox.askyesno(title='Confirm', 
+                                              message='Does the Result correct?')
+                
+                if result == True:
+                    file = open("Restaurant_Reviews.tsv","a+",encoding="utf-8")
+                    if (self.model.review_input(review)>=0.5):
+                        review = review + "\t"+ "1\n"
+                    else:
+                        review = review + "\t"+ "0\n"
+                elif result == False:
+                    file = open("Restaurant_Reviews.tsv","a+",encoding="utf-8")
+                    if (self.model.review_input(review)>=0.5):
+                        review = review + "\t"+ "0\n"
+                    else:
+                        review = review + "\t"+ "1\n"
+                if(file.write(review)>0):
+                    messagebox.showinfo(title="Status", message='Success')
+                else:
+                    messagebox.showinfo(title="Status", message='Fail')
+                file.close()
+        except:
+            messagebox.showinfo(title="Add to database", message='Fail')
             
     def classify(self):
-        review = self.txt_input.get("1.0","end")
-        result = self.model.review_input(review)
-        # result = NLP.review_input(review)
-        self.lbl_output.configure(text=str(result))
-        # if result >= 0.5:
-        #     lbl_output.configure(text=str(result))
-        # else:
-        #     lbl_output.configure(text=str(result))
-        messagebox.showinfo(title="Result", message=str(result))
-        self.add_to_database()
+        try:
+            review = self.txt_input.get("1.0","end")
+            result = self.model.review_input(review)
+            self.lbl_output.configure(text=str(result))
+            messagebox.showinfo(title="Result", message=str(result))
+            self.add_to_database()
+        except:
+            messagebox.showinfo(title="Classify", message='Fail')
     
     def down(e):
         if e.keycode == 13:
             self.clicked()
 
 def main():
-    
-    # models = ANLP.Model(model_path=r'classifier\multinomialNB_classifier.pickle', is_ann = False)
     models = ANLP.Model(model_path=r'model', is_ann = True)
-
     window=Tk()
-
-    # window.bind('<KeyPress>', down)
     mywin=MyWindow(window,models)
-    window.title('Artificial Neural Network')
+    window.title('Artificial Neural Network for text classification')
     window.geometry("1120x650")
+    window.resizable(False, False)
     window.mainloop()
 
 if __name__ == '__main__':

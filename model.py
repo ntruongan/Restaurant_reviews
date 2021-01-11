@@ -26,7 +26,7 @@ class Model():
         self.dataset = pd.read_csv(dataset_path, delimiter = '\t', quoting = 3)
         
         stopwords = []
-        file = open(stopword_name, "r")
+        file = open(stopword_name, "r",encoding="utf-8")
         try:
             content = file.read()
             stopwords_list = content.split(",")
@@ -38,24 +38,27 @@ class Model():
             file.close()
         self.stopwords = stopwords
         
-        corpus = [] #chứa các reviews đã qua các bước lọc
-        for i in range(0, self.dataset.shape[0]):
-            review = re.sub('[^a-zA-Z]', ' ', self.dataset['Review'][i]) #loại bỏ các phần không phải
-                #là chữ cái, thay thế bằng dấu spaces
-                #^: not
-                #a-zA-Z: a to z nor A to Z
-                #' ': space
-            review = review.lower() # all to lowercase
-            review = review.split() # split to words
-            ps = PorterStemmer() # ran => run,....
-            review = [ps.stem(word) for word in review if not word in set(self.stopwords)] # chuyển về nguyên
-            # mẫu các từ không có trong stopwords
-            review = ' '.join(review) # nối lại các từ thành câu
-            corpus.append(review)       
-        self.corpus = corpus   
+        # corpus = [] #chứa các reviews đã qua các bước lọc
+        # for i in range(0, self.dataset.shape[0]):
+        #     review = re.sub('[^a-zA-Z]', ' ', self.dataset['Review'][i]) #loại bỏ các phần không phải
+        #         #là chữ cái, thay thế bằng dấu spaces
+        #         #^: not
+        #         #a-zA-Z: a to z nor A to Z
+        #         #' ': space
+        #     review = review.lower() # all to lowercase
+        #     review = review.split() # split to words
+        #     ps = PorterStemmer() # ran => run,....
+        #     review = [ps.stem(word) for word in review if not word in set(self.stopwords)] # chuyển về nguyên
+        #     # mẫu các từ không có trong stopwords
+        #     review = ' '.join(review) # nối lại các từ thành câu
+        #     corpus.append(review)   
+        f = open(r'corpus\corpus.pickle', 'rb')
+        self.corpus = pickle.load(f)
+        f.close()
         
-        self.cv = CountVectorizer(max_features = 2000) # chọn ra 2000 từ
-        self.cv.fit_transform(self.corpus).toarray()
+        f = open(r'vectorizer\cv.pickle', 'rb')
+        self.cv = pickle.load(f)
+        f.close()
 
     def get_dataset(self, loc_path = 'Restaurant_Reviews.tsv'):
         self.dataset = pd.read_csv(loc_path, delimiter = '\t', quoting = 3)
@@ -82,7 +85,7 @@ class Model():
         
     def get_stopword_list(self, file_name = 'stopwords.txt'):
         stopwords = []
-        file = open(file_name, "r")
+        file = open(file_name, "r", encoding="utf-8")
         try:
             content = file.read()
             stopwords_list = content.split(",")
@@ -95,10 +98,10 @@ class Model():
             file.close()
         
     def create_count_vector(self):
-        self.cv = CountVectorizer(max_features = 2000) # chọn ra 2000 từ
+        self.cv = CountVectorizer() # chọn ra 2000 từ
         self.cv.fit_transform(self.corpus).toarray()
         mydictionary = sorted(self.cv.vocabulary_)
-        file = open(r'word_collection\words_in_BoW_model.txt', 'w+')
+        file = open(r'word_collection\words_in_BoW_model.txt', 'w+', encoding="utf-8")
         for key in mydictionary:
             file.write(key+"\n")
         file.close()
@@ -119,13 +122,10 @@ class Model():
         y_pred=self.model.predict(self.preprocess_review_input(review))
         # print(y_pred)
         result = np.array(y_pred)
-        if result.shape == (1, 1):
-            return y_pred[0][0]
-        elif result.shape == (1,):
-            return y_pred[0]
+        return sum(result)
         
     def top_stopword_count(self, top: int):
-        f = open(r"runtime\stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r", encoding="utf-8")
         stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -147,7 +147,7 @@ class Model():
         plt.show()
         
     def top_non_stopword_count(self, top: int):
-        f = open(r"runtime\non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r",encoding="utf-8")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_non_stw = {word:non_stopword_list_appear.count(word) for word in non_stopword_list_appear}
@@ -169,10 +169,10 @@ class Model():
         plt.show()        
         
     def stopword_and_non_stopword(self):
-        f = open(r"runtime\stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r",encoding="utf-8")
         stopword_list_appear = f.read().splitlines()
         f.close()
-        f = open(r"runtime\non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r",encoding="utf-8")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -192,10 +192,10 @@ class Model():
         plt.show()
     
     def total_stopword_appear_total_non_stopword_appear(self):
-        f = open(r"runtime\stopword_at_runtime.txt","r")
+        f = open(r"runtime\stopword_at_runtime.txt","r",encoding="utf-8")
         stopword_list_appear = f.read().splitlines()
         f.close()
-        f = open(r"runtime\non_stopword_at_runtime.txt","r")
+        f = open(r"runtime\non_stopword_at_runtime.txt","r",encoding="utf-8")
         non_stopword_list_appear = f.read().splitlines()
         f.close()
         dict_stw = {word:stopword_list_appear.count(word) for word in stopword_list_appear}
@@ -217,8 +217,8 @@ class Model():
         
 
             
-    def score(self):
-        pass
+
+            
         
         
         

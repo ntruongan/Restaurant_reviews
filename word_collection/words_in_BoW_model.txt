@@ -50,6 +50,7 @@ appetit
 appl
 appreci
 approv
+aquarium
 area
 arepa
 aria
@@ -246,6 +247,7 @@ carb
 card
 care
 carli
+carn
 carpaccio
 carri
 cart
@@ -569,6 +571,7 @@ elk
 elvi
 email
 employe
+enchilada
 end
 endless
 energi
@@ -596,6 +599,7 @@ except
 excit
 excus
 exeptionali
+exhibit
 expand
 expect
 expens
@@ -675,6 +679,7 @@ flower
 fluffi
 focaccina
 focus
+foil
 fold
 folk
 fondu
@@ -721,6 +726,7 @@ fyi
 ga
 gain
 gal
+gallo
 gambl
 ganoush
 garbag
@@ -763,6 +769,7 @@ grate
 gratitud
 gratuiti
 gravi
+gray
 greas
 greasi
 great
@@ -783,6 +790,7 @@ grown
 guacamol
 guess
 guest
+guisada
 guy
 gyro
 ha
@@ -915,6 +923,7 @@ italian
 item
 ive
 jalapeno
+jalisco
 jam
 jamaican
 janet
@@ -958,6 +967,7 @@ king
 kiosk
 kitchen
 knew
+knock
 knowledg
 la
 lack
@@ -1598,6 +1608,7 @@ smoke
 smooth
 smoothi
 smoothli
+snack
 snickerdoodl
 social
 soda
@@ -1667,6 +1678,7 @@ steiner
 step
 steve
 stick
+stingray
 stink
 stir
 stomach
@@ -1772,6 +1784,7 @@ throw
 thumb
 tickl
 tie
+tiger
 tigerlilli
 tile
 till
@@ -1783,6 +1796,7 @@ today
 told
 toler
 tomato
+tomorrow
 ton
 tongu
 tonight
@@ -1908,6 +1922,7 @@ warmer
 warn
 wash
 wasn
+wasnt
 wast
 watch
 water
@@ -1939,6 +1954,7 @@ window
 wine
 wing
 winner
+wipe
 wire
 wit
 without
