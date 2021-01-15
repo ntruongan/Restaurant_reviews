@@ -208,6 +208,7 @@ brushfir
 bu
 buck
 bud
+bueno
 buffet
 bug
 build
@@ -1091,6 +1092,7 @@ memori
 men
 mention
 menu
+menudo
 mesquit
 mess
 meth
@@ -1828,6 +1830,7 @@ trendi
 tribut
 trim
 trip
+tripe
 trippi
 troy
 trribl

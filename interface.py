@@ -35,6 +35,12 @@ class MyWindow:
         self.export_menu.add_command(label = "Top stopword count", 
                                      command = self.export_top_stopword_count)
         self.export_menu.add_separator()
+        self.export_menu.add_command(label = "Top non stopword count for bad review", 
+                                     command = self.export_top_non_stopword_count_0)
+        self.export_menu.add_separator()
+        self.export_menu.add_command(label = "Top non stopword count for good review", 
+                                     command = self.export_top_non_stopword_count_1)
+        self.export_menu.add_separator()
         self.export_menu.add_command(label = "Compare nonstopword and stopword at runtime", 
                                      command = self.export_total_stopword_appear_total_non_stopword_appear)
         
@@ -138,6 +144,22 @@ class MyWindow:
     def export_stopword_and_non_stopword(self):
         try:
             self.model.stopword_and_non_stopword()
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
+            
+    def export_top_non_stopword_count_1(self):
+        try:
+            a = self.popup_number()
+            self.model.top_non_stopword_count_for_good(a)
+            # messagebox.showinfo(title="Export", message="Success")
+        except:
+            messagebox.showinfo(title="Export", message="Fail")
+            
+    def export_top_non_stopword_count_0(self):
+        try:
+            a = self.popup_number()
+            self.model.top_non_stopword_count_for_bad(a)
+            # messagebox.showinfo(title="Export", message="Success")
         except:
             messagebox.showinfo(title="Export", message="Fail")
         
